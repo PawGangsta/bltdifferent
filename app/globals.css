@@ -37,14 +37,8 @@
        Both the CSS layout grid AND the background tile use --cell —
        they are always perfectly in sync at every viewport width.
     */
-    --cols: 16;
-    --cell: calc(100vw / var(--cols));
+    --cell: 40px;
   }
-
-  /* Column count — cell size updates automatically (~24px cells across all sizes) */
-  @media (min-width: 576px)  { :root { --cols: 24; } }
-  @media (min-width: 864px)  { :root { --cols: 32; } }
-  @media (min-width: 1152px) { :root { --cols: 48; } }
 
   /* ── Dark mode token overrides ─────────────────────────────────── */
   .dark {
@@ -163,8 +157,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: calc(var(--cell) * 2);
-    padding: 0 24px;
+    height: var(--cell);       /* exactly 40px */
+    min-width: var(--cell);    /* never less than 40px */
+    max-width: 160px;          /* never more than 160px = 4 cells */
+    padding: 0 16px;
     font-family: 'IBM Plex Mono', 'Courier New', monospace;
     font-size: 11px;
     font-weight: 700;
@@ -195,7 +191,7 @@
   }
   .btn-ghost:hover { color: var(--text-primary); }
 
-  .btn-sm { height: var(--cell); padding: 0 16px; font-size: 10px; }
+  .btn-sm { padding: 0 8px; font-size: 10px; }
   .btn-lg { padding: 0 32px; font-size: 13px; }
 
   /* ── Page root ──────────────────────────────────────────────────
@@ -213,11 +209,11 @@
 
   /* ── Hero ── */
   .hero-section {
-    min-height: calc(100vh - calc(var(--cell) * 2));
+    min-height: calc(100vh - var(--cell));
     display: grid;
-    grid-template-columns: repeat(var(--cols), 1fr);
-    /* compass area = 4 cells tall (2 for compass + 2 for scroll = ~96px) */
-    grid-template-rows: 1fr calc(var(--cell) * 4);
+    grid-template-columns: repeat(auto-fill, var(--cell));
+    /* compass area = 2 cells tall (1 compass + 1 scroll = 80px) */
+    grid-template-rows: 1fr calc(var(--cell) * 2);
   }
 
   .hero-content {
@@ -237,18 +233,18 @@
     justify-content: center;
   }
 
-  /* ── Compass cells — each one 2×2 block (four small grid squares) ── */
+  /* ── Compass cells — each exactly one 40px grid square ── */
   .compass-cell {
-    width: calc(var(--cell) * 2);
-    height: calc(var(--cell) * 2);
+    width: var(--cell);
+    height: var(--cell);
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .compass-scroll-cell {
-    width: calc(var(--cell) * 2);
-    height: calc(var(--cell) * 2);
+    width: var(--cell);
+    height: var(--cell);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -261,8 +257,8 @@
     display: block;
     filter: var(--compass-filter);
     opacity: 0.45;
-    width: calc(var(--cell) * 1.5);
-    height: calc(var(--cell) * 1.5);
+    width: 32px;
+    height: 32px;
   }
 
   .compass-scroll-label {
@@ -281,7 +277,7 @@
   */
   .grid-section {
     display: grid;
-    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-columns: repeat(auto-fill, var(--cell));
     grid-auto-rows: var(--cell);
   }
 
@@ -307,7 +303,7 @@
     top: 0;
     z-index: 100;
     width: 100%;
-    height: calc(var(--cell) * 2);
+    height: var(--cell);
     background: var(--bg-surface);
     border-bottom: 1px solid var(--border);
     display: flex;
@@ -410,7 +406,7 @@
 
   /* Theme toggle — always visible */
   .nav-theme-toggle {
-    width: calc(var(--cell) * 2);
+    width: var(--cell);
     height: 100%;
     display: flex;
     align-items: center;
@@ -426,7 +422,7 @@
 
   /* Burger — mobile only */
   .nav-burger {
-    width: calc(var(--cell) * 2);
+    width: var(--cell);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -461,7 +457,7 @@
     background: var(--bg-surface);
     display: flex;
     flex-direction: column;
-    padding-top: calc(var(--cell) * 2);
+    padding-top: var(--cell);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
@@ -489,7 +485,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(var(--cell) * 2);
+    min-height: var(--cell);
     font-family: 'IBM Plex Mono', 'Courier New', monospace;
     font-size: 12px;
     font-weight: 700;
@@ -509,7 +505,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(var(--cell) * 2);
+    min-height: var(--cell);
     font-family: 'IBM Plex Mono', 'Courier New', monospace;
     font-size: 12px;
     font-weight: 700;
