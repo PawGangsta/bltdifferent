@@ -85,7 +85,7 @@ export const NorthStarCompass = () => {
       <div className="compass-cell">
         <div ref={compassRef} style={{ transform: `rotate(${rotation}deg)` }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/compass.svg" width={88} height={88} alt="compass" className="compass-image" />
+          <img src="/compass.svg" alt="compass" className="compass-image" />
         </div>
       </div>
 
