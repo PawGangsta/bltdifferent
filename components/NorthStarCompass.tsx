@@ -90,7 +90,7 @@ export const NorthStarCompass = () => {
         style={{ transform: `rotate(${rotation}deg)` }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/compass.svg" width={88} height={88} alt="compass" style={{ display: 'block', filter: 'brightness(0)' }} />
+        <img src="/compass.svg" width={88} height={88} alt="compass" style={{ display: 'block', filter: 'brightness(0)', opacity: 0.45 }} />
       </div>
 
       {/* Scroll arrow — fades in on tracking */}
@@ -102,12 +102,12 @@ export const NorthStarCompass = () => {
         <span style={{
           fontSize: '9px', fontFamily: "'Courier New', monospace",
           letterSpacing: '0.25em', textTransform: 'uppercase',
-          color: 'rgba(0,0,0,0.75)',
+          color: '#0d0d0d',
         }}>Scroll</span>
         <svg width="14" height="22" viewBox="0 0 14 22" fill="none" data-scroll-arrow
           style={{ animation: 'scrollBounce 2.4s ease-in-out infinite' }}>
-          <line x1="7" y1="0" x2="7" y2="18" stroke="rgba(0,0,0,0.75)" strokeWidth="1" />
-          <polyline points="2,13 7,19 12,13" stroke="rgba(0,0,0,0.75)" strokeWidth="1" fill="none" />
+          <line x1="7" y1="0" x2="7" y2="18" stroke="#0d0d0d" strokeWidth="1.5" />
+          <polyline points="2,13 7,19 12,13" stroke="#0d0d0d" strokeWidth="1.5" fill="none" />
         </svg>
       </div>
     </div>

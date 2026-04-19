@@ -35,7 +35,7 @@ export default function Home() {
       </section>
 
       {/* ── Below-fold sections placeholder ── */}
-      <section className="blueprint-grid min-h-screen flex flex-col items-center justify-center px-6 gap-8">
+      <section className="min-h-screen flex flex-col items-center justify-center px-6 gap-8">
         <p className="text-[10px] font-mono text-[#aaa] uppercase tracking-widest">
           {'// Design System Preview'}
         </p>
