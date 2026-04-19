@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { ThemeToggle } from './ThemeToggle'
 
 const NAV_ITEMS = ['Services', 'Products', 'Portfolio', 'Philosophy']
 
@@ -10,7 +11,6 @@ export const Navbar = () => {
   const [menuOpen, setMenuOpen]     = useState(false)
   const scrolledRef                 = useRef(false)
 
-  // Logo swap on scroll
   useEffect(() => {
     const onScroll = () => {
       const shouldSwitch = window.scrollY > 40
@@ -27,7 +27,6 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
@@ -36,7 +35,7 @@ export const Navbar = () => {
   return (
     <>
       <nav className="nav-bar">
-        {/* Logo */}
+        {/* Logo block — always dark, left edge */}
         <div className="nav-logo-block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -46,33 +45,32 @@ export const Navbar = () => {
           />
         </div>
 
-        {/* Desktop nav items — hidden on mobile */}
+        {/* Nav items — absolutely centered, desktop only */}
         <div className="nav-items">
           {NAV_ITEMS.map(item => (
             <a key={item} href="#" className="nav-item">{item}</a>
           ))}
         </div>
 
-        {/* Desktop CTAs — hidden on mobile */}
-        <div className="nav-cta-group">
+        {/* Right group — pushes to right edge */}
+        <div className="nav-right">
           <a href="#" className="nav-blueprint">Blueprint</a>
           <a href="#" className="nav-cta">Contact Us</a>
+          <ThemeToggle />
+          <button
+            type="button"
+            className={`nav-burger${menuOpen ? ' nav-burger--open' : ''}`}
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span className="nav-burger-line" />
+            <span className="nav-burger-line" />
+            <span className="nav-burger-line" />
+          </button>
         </div>
-
-        {/* Mobile burger / X — hidden on desktop */}
-        <button
-          type="button"
-          className={`nav-burger${menuOpen ? ' nav-burger--open' : ''}`}
-          onClick={() => setMenuOpen(o => !o)}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        >
-          <span className="nav-burger-line" />
-          <span className="nav-burger-line" />
-          <span className="nav-burger-line" />
-        </button>
       </nav>
 
-      {/* Full-page overlay */}
+      {/* Full-page overlay — mobile only */}
       <div className={`nav-overlay${menuOpen ? ' nav-overlay--open' : ''}`}>
         <div className="nav-overlay-items">
           {NAV_ITEMS.map(item => (
@@ -85,18 +83,10 @@ export const Navbar = () => {
               {item}
             </a>
           ))}
-          <a
-            href="#"
-            className="nav-overlay-blueprint"
-            onClick={() => setMenuOpen(false)}
-          >
+          <a href="#" className="nav-overlay-blueprint" onClick={() => setMenuOpen(false)}>
             Blueprint
           </a>
-          <a
-            href="#"
-            className="nav-overlay-cta"
-            onClick={() => setMenuOpen(false)}
-          >
+          <a href="#" className="nav-overlay-cta" onClick={() => setMenuOpen(false)}>
             Contact Us
           </a>
         </div>

@@ -7,17 +7,63 @@
 
 @layer base {
   :root {
-    --bg:           #f5f5f5;
-    --bg-surface:   #fbfbfb;
-    --text-primary: #0d0d0d;
-    --text-secondary: #555555;
-    --text-muted:   #999999;
-    --accent:       #0d0d0d;
-    --grid-dot:     rgba(0, 0, 0, 0.13);
-    --grid-line:    rgba(0, 0, 0, 0.05);
-    --grid-cross:   rgba(0, 0, 0, 0.22);
-    --grid-size:    200px;
-    --dot-size:     24px;
+    /* ── Color tokens ─────────────────────────────────────────────── */
+    --bg:               #f5f5f5;
+    --bg-surface:       #fbfbfb;
+    --text-primary:     #0d0d0d;
+    --text-secondary:   #555555;
+    --text-muted:       #999999;
+    --border:           rgba(0,0,0,0.1);
+    --border-strong:    rgba(0,0,0,0.4);
+    --accent-blue:      #3956da;
+    --accent-blue-hover:#2d47c2;
+    --nav-logo-bg:      #0d0d0d;
+
+    /* ── Grid background ──────────────────────────────────────────── */
+    --grid-line:        rgba(0,0,0,0.06);
+    --grid-dot:         rgba(0,0,0,0.18);
+
+    /* ── Cursor ───────────────────────────────────────────────────── */
+    --cursor-line:      rgba(0,0,0,0.12);
+    --cursor-cross:     rgba(0,0,0,0.65);
+    --cursor-dot-fill:  rgba(0,0,0,0.75);
+
+    /* ── Compass ──────────────────────────────────────────────────── */
+    --compass-filter:   brightness(0);
+
+    /* ── Grid layout system ─────────────────────────────────────────
+       --cols : number of columns at each breakpoint
+       --cell : single cell size (width = height = square)
+       Both the CSS layout grid AND the background tile use --cell —
+       they are always perfectly in sync at every viewport width.
+    */
+    --cols: 8;
+    --cell: calc(100vw / var(--cols));
+  }
+
+  /* Column count — cell size updates automatically */
+  @media (min-width: 576px)  { :root { --cols: 12; } }
+  @media (min-width: 864px)  { :root { --cols: 16; } }
+  @media (min-width: 1152px) { :root { --cols: 24; } }
+
+  /* ── Dark mode token overrides ─────────────────────────────────── */
+  .dark {
+    --bg:               #0a0a0a;
+    --bg-surface:       #111111;
+    --text-primary:     #f0f0f0;
+    --text-secondary:   #888888;
+    --text-muted:       #444444;
+    --border:           rgba(255,255,255,0.08);
+    --border-strong:    rgba(255,255,255,0.3);
+    --accent-blue:      #4a6aff;
+    --accent-blue-hover:#3a5aef;
+    --nav-logo-bg:      #1a1a1a;
+    --grid-line:        rgba(255,255,255,0.05);
+    --grid-dot:         rgba(255,255,255,0.15);
+    --cursor-line:      rgba(255,255,255,0.12);
+    --cursor-cross:     rgba(255,255,255,0.55);
+    --cursor-dot-fill:  rgba(255,255,255,0.75);
+    --compass-filter:   brightness(0) invert(1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,27 +96,30 @@
   h2 { font-size: clamp(28px, 4.5vw, 48px); }
   h3 { font-size: clamp(22px, 3.5vw, 36px); }
 
-  ::selection { background: rgba(0,0,0,0.08); }
+  ::selection { background: var(--border-strong); color: var(--bg); }
 
   ::-webkit-scrollbar { width: 3px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 }
 
 @layer components {
 
-  /*
-    Blueprint grid:
-    Layer 1 — SVG tile (200px): ghost grid lines + crosshair arms at every intersection
-    Layer 2 — radial-gradient (24px): subtle dot matrix
+  /* ── Blueprint grid background ──────────────────────────────────
+     Three layers:
+       1. Dots at every grid intersection (radial-gradient)
+       2. Horizontal lines (linear-gradient)
+       3. Vertical lines (linear-gradient)
+     All three share the same --cell tile size — always in sync.
   */
   .blueprint-grid {
     background-color: var(--bg);
     background-image:
-      linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
-    background-size: 96px 96px;
+      radial-gradient(circle, var(--grid-dot) 1px, transparent 1px),
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--cell) var(--cell);
   }
 
   /* Measurement label on cards */
@@ -81,11 +130,10 @@
     top: 0;
     font-family: 'Fira Code', monospace;
     font-size: 10px;
-    color: rgba(0,0,0,0.25);
+    color: var(--text-muted);
     white-space: nowrap;
   }
 
-  /* Cursor blink for terminal-style text */
   .cursor-blink::after {
     content: '_';
     animation: blink 1.1s step-end infinite;
@@ -94,7 +142,7 @@
 
   @keyframes blink {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+    50%       { opacity: 0; }
   }
 
   @keyframes scrollBounce {
@@ -102,31 +150,34 @@
     50%       { transform: translateY(5px); opacity: 1;   }
   }
 
-  /* Thin border utility — blueprint corner style */
   .grid-border {
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
     position: relative;
   }
 
-  /* ── Page root — global scrolling grid, clears fixed nav ── */
+  /* ── Page root ──────────────────────────────────────────────────
+     No padding-top — the nav is in document flow (sticky, row 1).
+     Grid starts at (0,0): background and layout are perfectly aligned.
+  */
   .page-main {
-    padding-top: 80px;
     background-color: var(--bg);
     background-image:
-      linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
-    background-size: 96px 96px;
+      radial-gradient(circle, var(--grid-dot) 1px, transparent 1px),
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--cell) var(--cell);
   }
 
   /* ── Hero ── */
   .hero-section {
-    height: calc(100vh - 80px);
+    min-height: calc(100vh - var(--cell));
     display: grid;
-    grid-template-rows: 3fr 1fr;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: 1fr calc(var(--cell) * 2);
   }
 
-  /* Content — fills top 75%, flex-centered within its row */
   .hero-content {
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -136,39 +187,99 @@
     padding: 0 24px;
   }
 
-  /* Compass — fills bottom 25%, flex-centered within its row */
   .hero-compass-cell {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ── Compass cells — each one grid square ── */
+  .compass-cell {
+    width: var(--cell);
+    height: var(--cell);
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  /* ── Navigation bar ── */
-  .nav-bar {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    right: 16px;
-    z-index: 100;
-    background: #fbfbfb;
-    border: 1px solid rgba(0,0,0,0.1);
-    padding: 8px;
+  .compass-scroll-cell {
+    width: var(--cell);
+    height: var(--cell);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-primary);
   }
 
-  /* Logo — sits in a solid dark block, left column */
+  .compass-image {
+    display: block;
+    filter: var(--compass-filter);
+    opacity: 0.45;
+  }
+
+  .compass-scroll-label {
+    font-size: 9px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+  }
+
+  /* ── Grid layout system ─────────────────────────────────────────
+     .grid-section  — drop on any section to snap children to cells
+     .span-col-*    — merge N columns horizontally
+     .span-row-*    — merge N rows vertically
+     Combine them to create any rectangle: span-col-3 span-row-2 = 3×2 block
+  */
+  .grid-section {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-auto-rows: var(--cell);
+  }
+
+  .span-col-2    { grid-column: span 2; }
+  .span-col-3    { grid-column: span 3; }
+  .span-col-4    { grid-column: span 4; }
+  .span-col-6    { grid-column: span 6; }
+  .span-col-8    { grid-column: span 8; }
+  .span-col-12   { grid-column: span 12; }
+  .span-col-full { grid-column: 1 / -1; }
+
+  .span-row-2 { grid-row: span 2; }
+  .span-row-3 { grid-row: span 3; }
+  .span-row-4 { grid-row: span 4; }
+  .span-row-6 { grid-row: span 6; }
+
+  /* ── Navigation bar ─────────────────────────────────────────────
+     Row 1 of the page grid. Sticky — stays in view on scroll.
+     Height = exactly 1 cell. Edge-to-edge, no floating margin.
+  */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    height: var(--cell);
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: stretch;
+  }
+
+  /* Dark logo block — always dark regardless of theme */
   .nav-logo-block {
-    background: #0d0d0d;
-    padding: 8px 16px;
+    background: var(--nav-logo-bg);
+    padding: 0 16px;
     display: flex;
     align-items: center;
-    align-self: stretch;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
   }
 
   .nav-logo {
-    height: 24px;
+    height: 20px;
     width: auto;
     display: block;
     transform: scaleX(1);
@@ -177,14 +288,14 @@
   }
   .nav-logo--squished { transform: scaleX(0); }
 
-  /* Nav items — center column, each individually bordered — hidden on mobile */
+  /* Nav items — centered absolute, hidden on mobile */
   .nav-items {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    height: 100%;
     display: none;
     align-items: center;
-    gap: 8px;
   }
 
   .nav-item {
@@ -193,42 +304,26 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(0,0,0,0.5);
+    color: var(--text-muted);
     text-decoration: none;
-    border: 1px solid rgba(0,0,0,0.12);
-    padding: 8px 16px;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-  .nav-item:hover {
-    color: #0d0d0d;
-    border-color: rgba(0,0,0,0.4);
-  }
-
-  /* CTA — desktop only, filled dark */
-  .nav-cta {
-    font-family: 'IBM Plex Mono', 'Courier New', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #f5f5f5;
-    text-decoration: none;
-    background: #0d0d0d;
-    padding: 8px 16px;
+    padding: 0 16px;
+    height: 100%;
     display: flex;
     align-items: center;
-    transition: background 0.15s ease;
+    border-right: 1px solid var(--border);
+    transition: color 0.15s ease, background 0.15s ease;
   }
-  .nav-cta:hover { background: #333333; }
+  .nav-item:first-child { border-left: 1px solid var(--border); }
+  .nav-item:hover { color: var(--text-primary); background: var(--grid-line); }
 
-  /* CTA group — wraps blueprint + contact us side by side */
-  .nav-cta-group {
-    display: none;
-    align-items: center;
-    gap: 8px;
+  /* Right-side group — fills remaining space, pushes to right edge */
+  .nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: stretch;
   }
 
-  /* Blueprint CTA */
+  /* Blueprint CTA — desktop only */
   .nav-blueprint {
     font-family: 'IBM Plex Mono', 'Courier New', monospace;
     font-size: 11px;
@@ -237,79 +332,97 @@
     text-transform: uppercase;
     color: #f5f5f5;
     text-decoration: none;
-    background-color: #3956da;
+    background-color: var(--accent-blue);
     background-image:
-      repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.06) 0px,
-        rgba(255,255,255,0.06) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        rgba(255,255,255,0.06) 0px,
-        rgba(255,255,255,0.06) 1px,
-        transparent 1px,
-        transparent 16px
-      );
-    padding: 8px 16px;
-    display: flex;
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 16px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 16px);
+    padding: 0 16px;
+    display: none;
     align-items: center;
+    border-left: 1px solid var(--border);
     transition: background-color 0.15s ease;
   }
-  .nav-blueprint:hover { background-color: #2d47c2; }
+  .nav-blueprint:hover { background-color: var(--accent-blue-hover); }
 
-  /* ── Burger / X button — mobile only ── */
+  /* Contact CTA — desktop only — auto-inverts in dark mode */
+  .nav-cta {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bg);
+    text-decoration: none;
+    background: var(--text-primary);
+    padding: 0 16px;
+    display: none;
+    align-items: center;
+    border-left: 1px solid var(--border);
+    transition: background 0.15s ease;
+  }
+  .nav-cta:hover { background: var(--text-secondary); }
+
+  /* Theme toggle — always visible */
+  .nav-theme-toggle {
+    width: var(--cell);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--border);
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .nav-theme-toggle:hover { color: var(--text-primary); background: var(--grid-line); }
+
+  /* Burger — mobile only */
   .nav-burger {
+    width: var(--cell);
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 5px;
-    width: 40px;
-    height: 40px;
     background: none;
     border: none;
+    border-left: 1px solid var(--border);
     padding: 0;
+    flex-shrink: 0;
   }
 
   .nav-burger-line {
     display: block;
-    width: 24px;
+    width: 20px;
     height: 1.5px;
-    background: #0d0d0d;
+    background: var(--text-primary);
     transition: transform 0.22s ease, opacity 0.22s ease;
     transform-origin: center;
   }
 
-  .nav-burger--open .nav-burger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-  .nav-burger--open .nav-burger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-burger--open .nav-burger-line:nth-child(1) { transform: translateY(6.5px)  rotate(45deg);  }
+  .nav-burger--open .nav-burger-line:nth-child(2) { opacity: 0; transform: scaleX(0);              }
   .nav-burger--open .nav-burger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-  /* ── Full-page overlay — light, bordered rows ── */
+  /* Full-page overlay */
   .nav-overlay {
     position: fixed;
     inset: 0;
     z-index: 99;
-    background: #fbfbfb;
+    background: var(--bg-surface);
     display: flex;
     flex-direction: column;
-    padding-top: 72px;
+    padding-top: var(--cell);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
   }
-  .nav-overlay--open {
-    opacity: 1;
-    pointer-events: all;
-  }
+  .nav-overlay--open { opacity: 1; pointer-events: all; }
 
-  .nav-overlay-items {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
+  .nav-overlay-items { flex: 1; display: flex; flex-direction: column; }
 
   .nav-overlay-item {
     flex: 1;
@@ -319,18 +432,18 @@
     font-family: 'IBM Plex Mono', 'Courier New', monospace;
     font-size: 14px;
     font-weight: 400;
-    color: #888888;
+    color: var(--text-muted);
     text-decoration: none;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 1px solid var(--border);
     transition: background 0.15s ease, color 0.15s ease;
   }
-  .nav-overlay-item:hover { color: #0d0d0d; background: rgba(0,0,0,0.02); }
+  .nav-overlay-item:hover { color: var(--text-primary); background: var(--grid-line); }
 
   .nav-overlay-blueprint {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 72px;
+    min-height: var(--cell);
     font-family: 'IBM Plex Mono', 'Courier New', monospace;
     font-size: 12px;
     font-weight: 700;
@@ -338,48 +451,37 @@
     text-transform: uppercase;
     color: #f5f5f5;
     text-decoration: none;
-    background-color: #3956da;
+    background-color: var(--accent-blue);
     background-image:
-      repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.06) 0px,
-        rgba(255,255,255,0.06) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        rgba(255,255,255,0.06) 0px,
-        rgba(255,255,255,0.06) 1px,
-        transparent 1px,
-        transparent 16px
-      );
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 16px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 16px);
     transition: background-color 0.15s ease;
   }
-  .nav-overlay-blueprint:hover { background-color: #2d47c2; }
+  .nav-overlay-blueprint:hover { background-color: var(--accent-blue-hover); }
 
   .nav-overlay-cta {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 72px;
+    min-height: var(--cell);
     font-family: 'IBM Plex Mono', 'Courier New', monospace;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #fbfbfb;
-    background: #0d0d0d;
+    color: var(--bg);
+    background: var(--text-primary);
     text-decoration: none;
     transition: background 0.15s ease;
   }
-  .nav-overlay-cta:hover { background: #333333; }
+  .nav-overlay-cta:hover { background: var(--text-secondary); }
 
-  /* ── Desktop: show nav items + CTA, hide burger ── */
+  /* ── Desktop: show nav + CTAs, hide burger ── */
   @media (min-width: 768px) {
-    .nav-items      { display: flex; }
-    .nav-cta-group  { display: flex; }
-    .nav-burger     { display: none; }
+    .nav-items     { display: flex; }
+    .nav-blueprint { display: flex; }
+    .nav-cta       { display: flex; }
+    .nav-burger    { display: none; }
   }
 
   /* ── Hide crosshair on touch devices ── */
@@ -393,7 +495,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    background: rgba(0,0,0,0.12) !important;
+    background: var(--cursor-line) !important;
     pointer-events: none;
     z-index: 9999;
     will-change: transform;
@@ -412,10 +514,7 @@
     will-change: transform;
   }
   .cursor-plus-h,
-  .cursor-plus-v {
-    position: absolute;
-    background: rgba(0,0,0,0.65);
-  }
+  .cursor-plus-v { position: absolute; background: var(--cursor-cross); }
   .cursor-plus-h { top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%); }
   .cursor-plus-v { left: 50%; top: 0; width: 1px; height: 100%; transform: translateX(-50%); }
 
@@ -426,7 +525,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: rgba(0,0,0,0.75);
+    background: var(--cursor-dot-fill);
     pointer-events: none;
     z-index: 10000;
     opacity: 0;
@@ -435,8 +534,8 @@
 }
 
 @layer utilities {
-  .text-balance  { text-wrap: balance; }
-  .touch-target  { min-height: 44px; min-width: 44px; }
+  .text-balance   { text-wrap: balance; /* Chrome 114+, fine for this project */ }
+  .touch-target   { min-height: 44px; min-width: 44px; }
   .text-secondary { color: var(--text-secondary); }
   .text-muted     { color: var(--text-muted); }
 }

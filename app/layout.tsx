@@ -14,7 +14,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: the blocking script below sets .dark before React
+    // hydrates, so the server-rendered class won't match the client — this suppresses
+    // the benign mismatch warning.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Blocking script — sets .dark before first paint to prevent flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme'),p=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(t===null&&p))document.documentElement.classList.add('dark')}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="antialiased">
         <CrosshairCursor />
         <Navbar />
