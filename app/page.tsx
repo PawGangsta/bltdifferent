@@ -6,10 +6,17 @@ export default function Home() {
   return (
     <main className="page-main">
 
-      {/* ── Hero — real CSS grid, elements snap to cells ── */}
+      {/* ── Hero — real bordered DOM cells, pixel-perfect grid ── */}
       <section className="hero-section">
 
-        {/* Content: spans all cols, rows 1-7 */}
+        {/* 13 × 8 = 104 real cells with borders — this IS the grid */}
+        <div className="hero-grid-overlay" aria-hidden="true">
+          {Array.from({ length: 104 }).map((_, i) => (
+            <div key={i} className="hero-grid-cell" />
+          ))}
+        </div>
+
+        {/* Content: top 75% of hero, flex-centered */}
         <div className="hero-content">
           <p className="text-xs font-mono text-[#222] tracking-[0.3em] uppercase">
             Reality By Design
@@ -27,7 +34,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Compass: locked into center 3 cols, last row */}
+        {/* Compass: center 3 cols (6-8 of 13), bottom 2 rows (7-8 of 8) */}
         <div className="hero-compass-cell">
           <NorthStarCompass />
         </div>

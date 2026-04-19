@@ -118,18 +118,35 @@
     background-size: 96px 96px;
   }
 
-  /* ── Hero — CSS grid for layout, transparent so page-main grid shows through ── */
+  /* ── Hero — own background so the real cell borders are visible ── */
   .hero-section {
     height: calc(100vh - 80px);
+    position: relative;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* Real DOM grid — 13 cols × 8 rows of bordered cells */
+  .hero-grid-overlay {
+    position: absolute;
+    inset: 0;
     display: grid;
     grid-template-columns: repeat(13, 1fr);
     grid-template-rows: repeat(8, 1fr);
+    pointer-events: none;
   }
 
-  /* Content: cols 1-13, rows 1-6 */
+  .hero-grid-cell {
+    border-right: 1px solid rgba(0,0,0,0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  /* Content: flex-centered, z-index above cells */
   .hero-content {
-    grid-column: 1 / 14;
-    grid-row: 1 / 7;
+    position: absolute;
+    /* Leave bottom 25% (2 of 8 rows) for compass */
+    top: 0; left: 0; right: 0;
+    height: 75%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -137,24 +154,33 @@
     gap: 24px;
     text-align: center;
     padding: 0 24px;
+    z-index: 1;
   }
 
-  /* Compass: center 3 cols, rows 7-8 — 2 rows gives room for compass + scroll */
+  /* Compass: aligned to center 3 cols (6-8 of 13), bottom 2 rows (7-8 of 8) */
   .hero-compass-cell {
-    grid-column: 6 / 9;
-    grid-row: 7 / 9;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% * 3 / 13);
+    height: calc(100% * 2 / 8);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1;
   }
 
   @media (max-width: 767px) {
-    .hero-section {
+    .hero-grid-overlay {
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(10, 1fr);
     }
-    .hero-content      { grid-column: 1 / 5; grid-row: 1 / 9; }
-    .hero-compass-cell { grid-column: 2 / 4; grid-row: 9 / 11; }
+    .hero-content  { height: 80%; }
+    .hero-compass-cell {
+      width: calc(100% * 2 / 4);
+      height: calc(100% * 2 / 10);
+    }
   }
 
   /* ── Navigation bar ── */
