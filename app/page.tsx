@@ -1,7 +1,6 @@
 import { Button } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { NorthStarCompass } from '@/components/NorthStarCompass'
-import { HeroClusters } from '@/components/HeroClusters'
 
 export default function Home() {
   return (
@@ -9,7 +8,6 @@ export default function Home() {
 
       {/* ── Hero — full viewport height ── */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-        <HeroClusters />
 
         {/* Content */}
         <div className="text-center max-w-3xl space-y-6">
