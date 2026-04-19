@@ -2,26 +2,410 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Fira+Code:wght@400&display=swap');
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg:           #f5f5f5;
+    --bg-surface:   #fbfbfb;
+    --text-primary: #0d0d0d;
+    --text-secondary: #555555;
+    --text-muted:   #999999;
+    --accent:       #0d0d0d;
+    --grid-dot:     rgba(0, 0, 0, 0.13);
+    --grid-line:    rgba(0, 0, 0, 0.05);
+    --grid-cross:   rgba(0, 0, 0, 0.22);
+    --grid-size:    200px;
+    --dot-size:     24px;
   }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  @media (pointer: fine) {
+    * { cursor: none !important; }
+    a, button, input, select, textarea, label, [role="button"] { cursor: none !important; }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+  }
+
+  h1 { font-size: clamp(36px, 6vw, 64px); }
+  h2 { font-size: clamp(28px, 4.5vw, 48px); }
+  h3 { font-size: clamp(22px, 3.5vw, 36px); }
+
+  ::selection { background: rgba(0,0,0,0.08); }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+
+  /*
+    Blueprint grid:
+    Layer 1 — SVG tile (200px): ghost grid lines + crosshair arms at every intersection
+    Layer 2 — radial-gradient (24px): subtle dot matrix
+  */
+  .blueprint-grid {
+    background-color: var(--bg);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cline x1='0' y1='0.5' x2='480' y2='0.5' stroke='rgba(0,0,0,0.04)' stroke-width='1'/%3E%3Cline x1='0.5' y1='0' x2='0.5' y2='480' stroke='rgba(0,0,0,0.04)' stroke-width='1'/%3E%3Cline x1='0' y1='0.5' x2='16' y2='0.5' stroke='rgba(0,0,0,0.15)' stroke-width='1'/%3E%3Cline x1='0.5' y1='0' x2='0.5' y2='16' stroke='rgba(0,0,0,0.15)' stroke-width='1'/%3E%3Cline x1='464' y1='0.5' x2='480' y2='0.5' stroke='rgba(0,0,0,0.15)' stroke-width='1'/%3E%3Cline x1='0.5' y1='464' x2='0.5' y2='480' stroke='rgba(0,0,0,0.15)' stroke-width='1'/%3E%3C/svg%3E"),
+      radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
+    background-size: 480px 480px, 24px 24px;
+    background-attachment: fixed;
+  }
+
+  /* Measurement label on cards */
+  .measurement::before {
+    content: attr(data-measurement);
+    position: absolute;
+    left: -2.5rem;
+    top: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    color: rgba(0,0,0,0.25);
+    white-space: nowrap;
+  }
+
+  /* Cursor blink for terminal-style text */
+  .cursor-blink::after {
+    content: '_';
+    animation: blink 1.1s step-end infinite;
+    color: var(--text-primary);
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0);    opacity: 0.5; }
+    50%       { transform: translateY(5px); opacity: 1;   }
+  }
+
+  /* Thin border utility — blueprint corner style */
+  .grid-border {
+    border: 1px solid rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  /* ── Page root — clears floating nav ── */
+  .page-main { padding-top: 80px; }
+
+  /* ── Navigation bar ── */
+  .nav-bar {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    z-index: 100;
+    background: #fbfbfb;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Logo — sits in a solid dark block, left column */
+  .nav-logo-block {
+    background: #0d0d0d;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+  }
+
+  .nav-logo {
+    height: 24px;
+    width: auto;
+    display: block;
+    transform: scaleX(1);
+    transition: transform 0.18s ease;
+    transform-origin: left center;
+  }
+  .nav-logo--squished { transform: scaleX(0); }
+
+  /* Nav items — center column, each individually bordered — hidden on mobile */
+  .nav-items {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-item {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.5);
+    text-decoration: none;
+    border: 1px solid rgba(0,0,0,0.12);
+    padding: 8px 16px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .nav-item:hover {
+    color: #0d0d0d;
+    border-color: rgba(0,0,0,0.4);
+  }
+
+  /* CTA — desktop only, filled dark */
+  .nav-cta {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #f5f5f5;
+    text-decoration: none;
+    background: #0d0d0d;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    transition: background 0.15s ease;
+  }
+  .nav-cta:hover { background: #333333; }
+
+  /* CTA group — wraps blueprint + contact us side by side */
+  .nav-cta-group {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Blueprint CTA */
+  .nav-blueprint {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #f5f5f5;
+    text-decoration: none;
+    background-color: #3956da;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.06) 0px,
+        rgba(255,255,255,0.06) 1px,
+        transparent 1px,
+        transparent 16px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.06) 0px,
+        rgba(255,255,255,0.06) 1px,
+        transparent 1px,
+        transparent 16px
+      );
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.15s ease;
+  }
+  .nav-blueprint:hover { background-color: #2d47c2; }
+
+  /* ── Burger / X button — mobile only ── */
+  .nav-burger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .nav-burger-line {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: #0d0d0d;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+    transform-origin: center;
+  }
+
+  .nav-burger--open .nav-burger-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-burger--open .nav-burger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-burger--open .nav-burger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ── Full-page overlay — light, bordered rows ── */
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: #fbfbfb;
+    display: flex;
+    flex-direction: column;
+    padding-top: 72px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .nav-overlay--open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .nav-overlay-items {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-overlay-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 400;
+    color: #888888;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .nav-overlay-item:hover { color: #0d0d0d; background: rgba(0,0,0,0.02); }
+
+  .nav-overlay-blueprint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 72px;
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #f5f5f5;
+    text-decoration: none;
+    background-color: #3956da;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.06) 0px,
+        rgba(255,255,255,0.06) 1px,
+        transparent 1px,
+        transparent 16px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.06) 0px,
+        rgba(255,255,255,0.06) 1px,
+        transparent 1px,
+        transparent 16px
+      );
+    transition: background-color 0.15s ease;
+  }
+  .nav-overlay-blueprint:hover { background-color: #2d47c2; }
+
+  .nav-overlay-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 72px;
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fbfbfb;
+    background: #0d0d0d;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .nav-overlay-cta:hover { background: #333333; }
+
+  /* ── Desktop: show nav items + CTA, hide burger ── */
+  @media (min-width: 768px) {
+    .nav-items      { display: flex; }
+    .nav-cta-group  { display: flex; }
+    .nav-burger     { display: none; }
+  }
+
+  /* ── Hide crosshair on touch devices ── */
+  @media (pointer: coarse) {
+    .cursor-h, .cursor-v, .cursor-plus, .cursor-dot { display: none; }
+  }
+
+  /* ── Crosshair cursor ── */
+  .cursor-h,
+  .cursor-v {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.18);
+    pointer-events: none;
+    z-index: 9999;
+    will-change: transform;
+  }
+  .cursor-h { width: 100vw; height: 1px; }
+  .cursor-v { width: 1px;   height: 100vh; }
+
+  .cursor-plus {
+    position: fixed;
+    top: -12px;
+    left: -12px;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+    z-index: 10000;
+    will-change: transform;
+  }
+  .cursor-plus-h,
+  .cursor-plus-v {
+    position: absolute;
+    background: rgba(0,0,0,0.65);
+  }
+  .cursor-plus-h { top: 50%; left: 0; width: 100%; height: 1px; transform: translateY(-50%); }
+  .cursor-plus-v { left: 50%; top: 0; width: 1px; height: 100%; transform: translateX(-50%); }
+
+  .cursor-dot {
+    position: fixed;
+    top: -8px;
+    left: -8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.75);
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 0;
+    will-change: transform;
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance  { text-wrap: balance; }
+  .touch-target  { min-height: 44px; min-width: 44px; }
+  .text-secondary { color: var(--text-secondary); }
+  .text-muted     { color: var(--text-muted); }
 }
