@@ -121,39 +121,26 @@
   /* ── Hero ── */
   .hero-section {
     height: calc(100vh - 80px);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 25%;
+    display: grid;
+    grid-template-rows: 3fr 1fr;
   }
 
-  /* Content — centered in the top 75% of the hero */
+  /* Content — fills top 75%, flex-centered within its row */
   .hero-content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 24px;
     text-align: center;
     padding: 0 24px;
   }
 
-  /* Compass — pinned to bottom-center */
+  /* Compass — fills bottom 25%, flex-centered within its row */
   .hero-compass-cell {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 25%;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  @media (max-width: 767px) {
-    .hero-section { padding-bottom: 20%; }
-    .hero-compass-cell { height: 20%; }
   }
 
   /* ── Navigation bar ── */
