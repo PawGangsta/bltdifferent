@@ -118,15 +118,17 @@
     background-size: 96px 96px;
   }
 
-  /* ── Hero — own background so the real cell borders are visible ── */
+  /* ── Hero ── */
   .hero-section {
     height: calc(100vh - 80px);
     position: relative;
     background: var(--bg);
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Real DOM grid — 13 cols × 8 rows of bordered cells */
+  /* Grid overlay — purely decorative, never blocks content */
   .hero-grid-overlay {
     position: absolute;
     inset: 0;
@@ -134,6 +136,7 @@
     grid-template-columns: repeat(13, 1fr);
     grid-template-rows: repeat(8, 1fr);
     pointer-events: none;
+    z-index: 0;
   }
 
   .hero-grid-cell {
@@ -141,23 +144,21 @@
     border-bottom: 1px solid rgba(0,0,0,0.06);
   }
 
-  /* Content: flex-centered, z-index above cells */
+  /* Content — normal flow inside flex hero, sits above overlay */
   .hero-content {
-    position: absolute;
-    /* Leave bottom 25% (2 of 8 rows) for compass */
-    top: 0; left: 0; right: 0;
-    height: 75%;
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 24px;
     text-align: center;
     padding: 0 24px;
-    z-index: 1;
+    /* shift up so compass has space at bottom */
+    margin-bottom: calc(100vh * 0.25 - 80px * 0.25);
   }
 
-  /* Compass: aligned to center 3 cols (6-8 of 13), bottom 2 rows (7-8 of 8) */
+  /* Compass — absolute, snapped to center 3 cols × bottom 2 rows */
   .hero-compass-cell {
     position: absolute;
     bottom: 0;
@@ -176,9 +177,8 @@
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(10, 1fr);
     }
-    .hero-content  { height: 80%; }
     .hero-compass-cell {
-      width: calc(100% * 2 / 4);
+      width: calc(100% / 2);
       height: calc(100% * 2 / 10);
     }
   }
