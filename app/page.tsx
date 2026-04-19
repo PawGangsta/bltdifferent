@@ -7,7 +7,7 @@ export default function Home() {
     <main className="blueprint-grid page-main">
 
       {/* ── Hero — full viewport height ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+      <section className="hero-section relative flex flex-col items-center justify-center px-6">
 
         {/* Content */}
         <div className="text-center max-w-3xl space-y-6">
@@ -28,7 +28,7 @@ export default function Home() {
         </div>
 
         {/* Compass + scroll arrow — pinned to bottom center of hero */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+        <div className="hero-compass">
           <NorthStarCompass />
         </div>
 

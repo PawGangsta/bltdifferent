@@ -112,6 +112,12 @@
   /* ── Page root — clears floating nav ── */
   .page-main { padding-top: 80px; }
 
+  /* ── Hero section — exactly one viewport minus nav ── */
+  .hero-section { height: calc(100vh - 80px); }
+
+  /* ── Compass anchor — bottom-center of hero ── */
+  .hero-compass { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); }
+
   /* ── Navigation bar ── */
   .nav-bar {
     position: fixed;
