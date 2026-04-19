@@ -122,65 +122,38 @@
   .hero-section {
     height: calc(100vh - 80px);
     position: relative;
-    background: var(--bg);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-bottom: 25%;
   }
 
-  /* Grid overlay — purely decorative, never blocks content */
-  .hero-grid-overlay {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    grid-template-columns: repeat(13, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero-grid-cell {
-    border-right: 1px solid rgba(0,0,0,0.06);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-  }
-
-  /* Content — normal flow inside flex hero, sits above overlay */
+  /* Content — centered in the top 75% of the hero */
   .hero-content {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 24px;
     text-align: center;
     padding: 0 24px;
-    /* shift up so compass has space at bottom */
-    margin-bottom: calc(100vh * 0.25 - 80px * 0.25);
   }
 
-  /* Compass — absolute, snapped to center 3 cols × bottom 2 rows */
+  /* Compass — pinned to bottom-center */
   .hero-compass-cell {
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% * 3 / 13);
-    height: calc(100% * 2 / 8);
+    height: 25%;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1;
   }
 
   @media (max-width: 767px) {
-    .hero-grid-overlay {
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(10, 1fr);
-    }
-    .hero-compass-cell {
-      width: calc(100% / 2);
-      height: calc(100% * 2 / 10);
-    }
+    .hero-section { padding-bottom: 20%; }
+    .hero-compass-cell { height: 20%; }
   }
 
   /* ── Navigation bar ── */

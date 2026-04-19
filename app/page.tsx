@@ -6,17 +6,10 @@ export default function Home() {
   return (
     <main className="page-main">
 
-      {/* ── Hero — real bordered DOM cells, pixel-perfect grid ── */}
+      {/* ── Hero ── */}
       <section className="hero-section">
 
-        {/* 13 × 8 = 104 real cells with borders — this IS the grid */}
-        <div className="hero-grid-overlay" aria-hidden="true">
-          {Array.from({ length: 104 }).map((_, i) => (
-            <div key={i} className="hero-grid-cell" />
-          ))}
-        </div>
-
-        {/* Content: top 75% of hero, flex-centered */}
+        {/* Content: top 75% of hero */}
         <div className="hero-content">
           <p className="text-xs font-mono text-[#222] tracking-[0.3em] uppercase">
             Reality By Design
