@@ -4,13 +4,13 @@ import { NorthStarCompass } from '@/components/NorthStarCompass'
 
 export default function Home() {
   return (
-    <main className="blueprint-grid page-main">
+    <main className="page-main">
 
-      {/* ── Hero — full viewport height ── */}
-      <section className="hero-section relative flex flex-col items-center justify-center px-6">
+      {/* ── Hero — real CSS grid, elements snap to cells ── */}
+      <section className="hero-section">
 
-        {/* Content */}
-        <div className="text-center max-w-3xl space-y-6">
+        {/* Content: spans all cols, rows 1-7 */}
+        <div className="hero-content">
           <p className="text-xs font-mono text-[#222] tracking-[0.3em] uppercase">
             Reality By Design
           </p>
@@ -27,15 +27,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Compass + scroll arrow — pinned to bottom center of hero */}
-        <div className="hero-compass">
+        {/* Compass: locked into center 3 cols, last row */}
+        <div className="hero-compass-cell">
           <NorthStarCompass />
         </div>
 
       </section>
 
       {/* ── Below-fold sections placeholder ── */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-6 gap-8">
+      <section className="blueprint-grid min-h-screen flex flex-col items-center justify-center px-6 gap-8">
         <p className="text-[10px] font-mono text-[#aaa] uppercase tracking-widest">
           {'// Design System Preview'}
         </p>

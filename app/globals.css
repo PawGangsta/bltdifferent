@@ -112,11 +112,50 @@
   /* ── Page root — clears floating nav ── */
   .page-main { padding-top: 80px; }
 
-  /* ── Hero section — exactly one viewport minus nav ── */
-  .hero-section { height: calc(100vh - 80px); }
+  /* ── Hero — real CSS grid so elements snap to cells ── */
+  .hero-section {
+    height: calc(100vh - 80px);
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+    background-size: calc(100% / 13) calc((100vh - 80px) / 8);
+  }
 
-  /* ── Compass anchor — bottom-center of hero ── */
-  .hero-compass { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); }
+  /* Content spans cols 1-13, rows 1-7 — centered inside */
+  .hero-content {
+    grid-column: 1 / 14;
+    grid-row: 1 / 8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    text-align: center;
+    padding: 0 24px;
+  }
+
+  /* Compass locked into center 3 cols, last row */
+  .hero-compass-cell {
+    grid-column: 6 / 9;
+    grid-row: 8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 767px) {
+    .hero-section {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      background-size: calc(100% / 4) calc((100vh - 80px) / 10);
+    }
+    .hero-content  { grid-column: 1 / 5; grid-row: 1 / 9; }
+    .hero-compass-cell { grid-column: 2 / 4; grid-row: 10; }
+  }
 
   /* ── Navigation bar ── */
   .nav-bar {
