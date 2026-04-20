@@ -483,7 +483,7 @@ export const SpectralGhost = () => {
 
   return (
     <div className="ghost-box">
-      <div ref={containerRef} className="ghost-canvas-container" />
+      {/* Text sits behind the canvas — ghost glow reveals it from above */}
       <div className="ghost-text">
         <h2 className="ghost-quote">
           Veil of Dust<br />
@@ -492,6 +492,8 @@ export const SpectralGhost = () => {
         </h2>
         <p className="ghost-byline">Whispers through memory</p>
       </div>
+      {/* Canvas on top — transparent where no ghost, dark atmosphere covers edges */}
+      <div ref={containerRef} className="ghost-canvas-container" />
     </div>
   )
 }

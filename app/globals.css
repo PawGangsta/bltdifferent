@@ -592,10 +592,13 @@
     inset: 0;
   }
 
+  /* Text is behind the canvas in DOM order — no z-index needed.
+     Canvas sits on top and is transparent where there's no ghost,
+     letting the text show through. The atmosphere darkens the edges,
+     and the ghost glow reveals/illuminates the text from above. */
   .ghost-text {
     position: absolute;
     inset: 0;
-    z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -605,11 +608,11 @@
 
   .ghost-quote {
     font-family: 'IBM Plex Mono', 'Courier New', monospace;
-    font-size: clamp(24px, 4vw, 48px);
+    font-size: clamp(48px, 8vw, 96px);
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    line-height: 1.3;
+    line-height: 1.2;
     color: #e0e0e0;
     margin-bottom: 24px;
     text-align: center;
