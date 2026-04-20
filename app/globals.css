@@ -572,6 +572,53 @@
     opacity: 0;
     will-change: transform;
   }
+
+  /* ── Spectral Ghost section ─────────────────────────────────────
+     Full-viewport dark section. Canvas fills it absolutely;
+     text floats centered on top via z-index.
+  */
+  .ghost-section {
+    width: 100%;
+    min-height: calc(100vh - var(--cell));
+    background: #0a0a0a;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ghost-canvas-container {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ghost-text {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ghost-quote {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: clamp(32px, 6vw, 64px);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    color: #e0e0e0;
+    margin-bottom: 24px;
+  }
+
+  .ghost-byline {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(224, 224, 224, 0.4);
+  }
+
 }
 
 @layer utilities {

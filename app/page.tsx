@@ -1,6 +1,7 @@
 import { Button } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { NorthStarCompass } from '@/components/NorthStarCompass'
+import { SpectralGhost } from '@/components/SpectralGhost'
 
 export default function Home() {
   return (
@@ -33,6 +34,9 @@ export default function Home() {
         </div>
 
       </section>
+
+      {/* ── Ghost section ── */}
+      <SpectralGhost />
 
       {/* ── Below-fold sections placeholder ── */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 gap-8">
