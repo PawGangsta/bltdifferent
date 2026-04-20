@@ -1,5 +1,5 @@
-import { Button } from '@/components/Button'
 import { Card } from '@/components/Card'
+import { Button } from '@/components/Button'
 import { NorthStarCompass } from '@/components/NorthStarCompass'
 import { SpectralGhost } from '@/components/SpectralGhost'
 
@@ -10,33 +10,17 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="hero-section">
 
-        {/* Content: top 75% of hero */}
+        {/* Ghost box: the hero visual */}
         <div className="hero-content">
-          <p className="text-xs font-mono text-[#222] tracking-[0.3em] uppercase">
-            Reality By Design
-          </p>
-          <h1 id="north-star" className="cursor-blink text-[#0d0d0d]">
-            BLT DFRNT
-          </h1>
-          <p className="font-mono text-sm leading-relaxed max-w-md mx-auto text-[#555]">
-            Strategy · Branding · Digital Products · Experiences.
-            We build things that leave a mark.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button size="lg">View Work</Button>
-            <Button variant="secondary" size="lg">Get in Touch</Button>
-          </div>
+          <SpectralGhost />
         </div>
 
-        {/* Compass: center 3 cols (6-8 of 13), bottom 2 rows (7-8 of 8) */}
+        {/* Compass + scroll indicator */}
         <div className="hero-compass-cell">
           <NorthStarCompass />
         </div>
 
       </section>
-
-      {/* ── Ghost section ── */}
-      <SpectralGhost />
 
       {/* ── Below-fold sections placeholder ── */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 gap-8">

@@ -482,7 +482,7 @@ export const SpectralGhost = () => {
   }, [])
 
   return (
-    <section className="ghost-section">
+    <div className="ghost-box">
       <div ref={containerRef} className="ghost-canvas-container" />
       <div className="ghost-text">
         <h2 className="ghost-quote">
@@ -492,6 +492,6 @@ export const SpectralGhost = () => {
         </h2>
         <p className="ghost-byline">Whispers through memory</p>
       </div>
-    </section>
+    </div>
   )
 }
